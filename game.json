@@ -1,0 +1,58 @@
+{
+  "character":  {
+    "name": "Аругс",
+    "hp": 20,
+    "damage": 3,
+    "money": 10,
+    "items": ["Рапира"]
+  },
+  "seller": {
+    "name": "Даяна",
+    "hp": 15,
+    "damage": 1,
+    "money": 100,
+    "items": ["Щит", "Золотая секира"]
+  },
+  "enemy": [
+	{
+	"name": "Кобольт",	
+        "hp": 10,
+        "damage": 2,
+        "items": ["Шлем"],
+        "money" : 0
+        },
+        {
+	"name": "Cкелет",	
+        "hp": 5,
+        "damage": 4,
+        "items": [],
+        "money": 15
+        }
+      ],
+  "items": [
+      	{
+	  "name": "Рапира",
+          "hp": 0,
+          "damage": 1,
+          "cost" : 10
+        },
+	{
+	  "name": "Щит",
+          "hp": 10,
+          "damage": 0,
+          "cost" : 10
+        },
+        {
+	  "name": "Золотая секира",
+          "hp": 0,
+          "damage": 5,
+          "cost" : 25
+        },
+        {
+	  "name": "Шлем",
+          "hp": 5,
+          "damage": 0,
+          "cost" : 5
+        }
+      ]
+}
