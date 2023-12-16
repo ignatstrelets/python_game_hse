@@ -1,4 +1,5 @@
 import json
+import random
 
 def menu(game):
     print("\nНовая игра! \n")
@@ -22,6 +23,7 @@ def menu(game):
             break
         else:
             print("Неправильный ввод. Попробуйте ещё раз")
+            
 
 
 def view(state_dict):
@@ -39,16 +41,78 @@ def view(state_dict):
     items_str = ", ".join(available_items)
     print(f"Предметы: {items_str}.\n")
 
-# TODO: def trade(state_dict):
 # торговля использует change_game_values
+def trade(state_dict):
+    character = state_dict['character']
+    all_items = state_dict['items']
+    cash_shop = 0
+    #available_items = list()
+    print("МАГАЗИН")
+    action = input("Выберите действие: \n"
+                   "1 - Купить предметы\n"
+                   "0 - Выйти из магазина \n\n")
+    if action == '1':
+        print("Выберите предмет:")
+        for item in all_items['items']:
+            print(item['name'])
+            #available_items.append(str(item['name']))
+        choice = str(input())
+        for item in all_items:
+            if choice in item['name']:
+                action = input(choice+" стоит "+item['cost']+" монет.\n"
+                      "1 - Купить предмет\n"
+                      "2 - Назад")
+                if action == "1":
+                    if character['money'] >= item['cost']:
+                        change_game_values()
+                        #character['money'] -= item['cost']
+                        #character['damage'] += item['damage']
+                        #character['hp'] += item['hp']
+                        #character['items'].append(item['name'])
+                        #cash_shop += item['cost']
+                    else:
+                        print("У тебя недостаточно денег! Иди отсюда!")
+                        menu(game)
 
-# TODO: def fight(state_dict):
+                elif action =="2":
+                    trade(state_dict)
+                else:
+                    print("Неправильный ввод. Попробуйте ещё раз")
+                    trade(state_dict)
+    elif action == '2':
+        menu(game)
+    else:
+        print("Неправильный ввод. Попробуйте ещё раз")
+        
+
+def fight(state_dict):
+    character = state_dict['character']
+    all_enemy = state_dict['enemy']
+    enemy = random.choice(all_enemy)
+    cube = random.randint(1, 6)
+    if cube == 6: #критический удар
+        print("Критический удар!") 
+        all_enemy.remove(enemy)
+        change_game_values()
+    elif cube > 3:
+        enemy['hp'] -= character['damage']
+        if enemy['hp']<=0:
+            all_enemy.remove(enemy)
+            change_game_values()
+    else:
+        character['hp'] -= enemy['damage']
+        if character['hp'] <= 0:
+            print("Вы проиграли!")
+            exit()
+
+
 # сражение использует change_game_values
 
 # TODO: def change_game_values(state_dict)
 
 
+
 f = open('game.json', encoding='UTF8')
 game = json.load(f)
-
-menu(game)
+while True: #чтобы пользователю высвечивалось меню не один раз
+    menu(game)
