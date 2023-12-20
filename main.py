@@ -1,13 +1,14 @@
 import json
 import random
 
+
 def menu(game):
     while True:
-        action = input("Выберите действие: \n" 
-              "1 - Посмотреть характеристики \n"
-              "2 - Купить предметы \n"
-              "3 - Сражаться \n"
-              "0 - Выход \n\n")
+        action = input("Выберите действие: \n"
+                       "1 - Посмотреть характеристики \n"
+                       "2 - Купить предметы \n"
+                       "3 - Сражаться \n"
+                       "0 - Выход \n\n")
         if action == '1':
             print("\nПросмотр характеристик")
             view(game)
@@ -21,7 +22,7 @@ def menu(game):
             print("\nИгра завершена. \n")
             exit()
         else:
-            print("Неправильный ввод. Попробуйте ещё раз")       
+            print("Неправильный ввод. Попробуйте ещё раз")
 
 
 def view(state_dict):
@@ -32,12 +33,11 @@ def view(state_dict):
     print(f"Ваш урон: {character['damage']};")
     print(f"Количество денег: {character['money']} монет;")
     available_items = list()
-    print(character['items'])
     for available_item in character['items']:
         for item in all_items:
-            if item['name'] == available_item and item['damage']>0:
+            if item['name'] == available_item and item['damage'] > 0:
                 available_items.append(str(item['name']) + " (даёт +" + str(item['damage']) + " к урону)")
-            elif item['name'] == available_item and item['hp']>0:
+            elif item['name'] == available_item and item['hp'] > 0:
                 available_items.append(str(item['name']) + " (даёт +" + str(item['hp']) + " к хп)")
     items_str = ", ".join(available_items)
     print(f"Предметы: {items_str}.\n")
@@ -82,49 +82,51 @@ def trade(state_dict):
 
                 elif action =="2":
                     trade(state_dict)
-            else: 
+            else:
                 print("Неправильный ввод. Попробуйте ещё раз\n")
                 trade(state_dict)
     elif action == '0':
         menu(game)
     else:
         print("Неправильный ввод. Попробуйте ещё раз\n")
-        
+
 
 def fight(state_dict):
     character = state_dict['character']
     all_enemy = state_dict['enemy']
+    all_items = state_dict['items']
+    available_items = list()
     enemy = random.choice(all_enemy)
     if enemy == "":
         print("Вы победили всех врагов! \n")
         menu(state_dict)
-    print("Против вас "+str(enemy['name']))
+    print("Против вас " + str(enemy['name']))
     cube = random.randint(1, 6)
-    if cube == 6: #критический удар
-        print("Критический удар!") 
+    if cube == 6:  # критический удар
+        print("Критический удар!")
         all_enemy.remove(enemy)
         if enemy['items'] != []:
-            print(enemy['items'])
-            i = 0
-            while i < len(enemy['items']):
-                    print(i)
-                    character['items'].append(enemy['items'][i])
-                    i += 1
+            for item in enemy['items']:
+                for i in all_items:
+                    if i['name']==item:
+                        character['items'].append(item)
+                        character ['hp'] += i['hp']
+                        character['damage'] += i['damage']
         character['money'] += enemy['money']
         print("Победа!\n")
         menu(state_dict)
     elif cube > 3:
         print("Вы нанесли удар! \n")
         enemy['hp'] -= character['damage']
-        if enemy['hp']<=0:
+        if enemy['hp'] <= 0:
             all_enemy.remove(enemy)
             if enemy['items'] != []:
-                print(enemy['items'])
-                i = 0
-                while i < len(enemy['items']):
-                    print(i)      
-                    character['items'].append(enemy['items'][i])
-                    i +=1
+                for item in enemy['items']:
+                    for i in all_items:
+                        if i['name'] == item:
+                            character['items'].append(item)
+                            character['hp'] += i['hp']
+                            character['damage'] += i['damage']
             character['money'] += enemy['money']
             print("Победа!")
             menu(state_dict)
@@ -140,3 +142,4 @@ f = open('game.json', encoding='UTF8')
 game = json.load(f)
 print("\nНовая игра! \n")
 menu(game)
+
