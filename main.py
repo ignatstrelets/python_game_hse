@@ -95,51 +95,50 @@ def fight(state_dict):
     character = state_dict['character']
     all_enemy = state_dict['enemy']
     all_items = state_dict['items']
-    available_items = list()
-    enemy = random.choice(all_enemy)
-    if enemy == "":
+    if not all_enemy:
         print("Вы победили всех врагов! \n")
         menu(state_dict)
-    print("Против вас " + str(enemy['name']))
-    cube = random.randint(1, 6)
-    if cube == 6:  # критический удар
-        print("Критический удар!")
-        all_enemy.remove(enemy)
-        if enemy['items'] != []:
-            for item in enemy['items']:
-                for i in all_items:
-                    if i['name']==item:
-                        character['items'].append(item)
-                        character ['hp'] += i['hp']
-                        character['damage'] += i['damage']
-        character['money'] += enemy['money']
-        print("Победа!\n")
-        menu(state_dict)
-    elif cube > 3:
-        print("Вы нанесли удар! \n")
-        enemy['hp'] -= character['damage']
-        if enemy['hp'] <= 0:
+    else:
+        enemy = random.choice(all_enemy)
+        print("Против вас " + str(enemy['name']))
+        cube = random.randint(1, 6)
+        if cube == 6:  # критический удар
+            print("Критический удар!")
             all_enemy.remove(enemy)
             if enemy['items'] != []:
                 for item in enemy['items']:
                     for i in all_items:
-                        if i['name'] == item:
+                        if i['name']==item:
                             character['items'].append(item)
-                            character['hp'] += i['hp']
+                            character ['hp'] += i['hp']
                             character['damage'] += i['damage']
             character['money'] += enemy['money']
-            print("Победа!")
+            print("Победа!\n")
             menu(state_dict)
-    else:
-        character['hp'] -= enemy['damage']
-        print("По вам нанесли удар \n")
-        if character['hp'] <= 0:
-            print("Вы проиграли!")
-            exit()
+        elif cube > 3:
+            print("Вы нанесли удар! \n")
+            enemy['hp'] -= character['damage']
+            if enemy['hp'] <= 0:
+                all_enemy.remove(enemy)
+                if enemy['items'] != []:
+                    for item in enemy['items']:
+                        for i in all_items:
+                            if i['name'] == item:
+                                character['items'].append(item)
+                                character['hp'] += i['hp']
+                                character['damage'] += i['damage']
+                character['money'] += enemy['money']
+                print("Победа!")
+                menu(state_dict)
+        else:
+            character['hp'] -= enemy['damage']
+            print("По вам нанесли удар \n")
+            if character['hp'] <= 0:
+                print("Вы проиграли!")
+                exit()
 
 
 f = open('game.json', encoding='UTF8')
 game = json.load(f)
 print("\nНовая игра! \n")
 menu(game)
-
