@@ -95,7 +95,7 @@ def fight(state_dict):
     character = state_dict['character']
     all_enemy = state_dict['enemy']
     all_items = state_dict['items']
-    if not all_enemy:
+    if not all_enemy: #проверяет, пуст ли список врагов
         print("Вы победили всех врагов! \n")
         menu(state_dict)
     else:
